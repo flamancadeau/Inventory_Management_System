@@ -13,8 +13,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['password'])) {
 }
 
 $id = $_GET['id']; // Get the ID from the URL
-$company_name = "";
-$product_name = "";
+
 $unit = "";
 $Quantity = "";
 $Price = "";
@@ -94,7 +93,7 @@ while ($row = mysqli_fetch_array($res)) {
                             </div>
 
                             <div class="form-actions">
-                                <button type="submit" name="submit1" class="btn btn-success">Update</button>
+                                <button type="submit" name="submit1" style=" background: #6F4E37;border-radius:5px" class="btn btn-success">Update</button>
                             </div>
 
                             <div class="alert alert-success text-center" id="success" style="display: none;">

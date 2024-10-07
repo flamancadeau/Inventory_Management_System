@@ -12,7 +12,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['password'])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Admin Login - PHP Inventory Management System</title>
+    <title>Admin Login ||Inventory Management System</title>
     <meta charset="UTF-8"/> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
@@ -86,7 +86,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['password'])) {
 <body>
 <div id="loginbox">
     <form name="form1" class="form-vertical" action="" method="post">
-        <div class="control-group normal_text"><h3>Login Page</h3></div>
+        <div class="control-group normal_text"><h3 >Login Page</h3></div>
         <div class="control-group">
             <div class="controls">
                 <div class="main_input_box">
@@ -104,7 +104,7 @@ if (isset($_SESSION['username']) && isset($_SESSION['password'])) {
             </div>
         </div>
         <div class="form-actions">
-            <input type="submit" name="submit1" value="Login" class="btn btn-success"/>
+            <input type="submit" name="submit1" style=" background: #6F4E37;" value="Login" class="btn btn-success"/>
         </div>
     </form>
     <?php
@@ -132,3 +132,13 @@ if (isset($_SESSION['username']) && isset($_SESSION['password'])) {
 <script src="js/matrix.login.js"></script>
 </body>
 </html>
+
+<style>
+  body{
+    background: #6F4E37;
+  }   
+  h3{
+    color: yellow;
+  }
+   
+</style>

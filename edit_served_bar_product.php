@@ -7,13 +7,7 @@ session_start();
 if (!isset($_SESSION['username']) || !isset($_SESSION['password'])) {
     header("Location: logout.php"); 
     exit();
-
-
- 
 }
-
-// Get the product `id` from the URL
-$id = $_GET['id'];
 
 // Initialize variables
 $product_name = "";
@@ -22,14 +16,22 @@ $Quantity = "";
 $Price = "";
 $Date = "";
 
-// Fetch the product data to pre-fill the form
-$res = mysqli_query($link, "SELECT * FROM served_bar WHERE id='$id'");
-while ($row = mysqli_fetch_array($res)) {
-    $product_name = $row["product_name"];
-    $unit = $row["unit"];
-    $Price = $row["Price"];
-    $Date = $row["Date"];
-    $Quantity = $row["Quantity"];
+// Fetch the product data based on the Date from the URL
+if (isset($_GET['Date'])) {
+    $Date = mysqli_real_escape_string($link, $_GET['Date']);
+    $res = mysqli_query($link, "SELECT * FROM served_bar WHERE Date='$Date'");
+
+    // Check if any results were returned
+    if (mysqli_num_rows($res) > 0) {
+        // Assuming we want the first entry for the given date
+        $row = mysqli_fetch_array($res);
+        $product_name = $row["product_name"];
+        $unit = $row["unit"];
+        $Price = $row["Price"];
+        $Quantity = $row["Quantity"];
+    } else {
+        echo "<script>alert('No records found for the selected date.');</script>";
+    }
 }
 ?>
 
@@ -55,7 +57,7 @@ while ($row = mysqli_fetch_array($res)) {
                             <div class="control-group">
                                 <label class="control-label">Product Name:</label>
                                 <div class="controls">
-                                    <input type="text" name="product_name" value="<?php echo $product_name; ?>" class="span11" placeholder="Product name" />
+                                    <input type="text" name="product_name" value="<?php echo htmlspecialchars($product_name); ?>" class="span11" placeholder="Product name" />
                                 </div>
                             </div>
 
@@ -68,8 +70,8 @@ while ($row = mysqli_fetch_array($res)) {
                                         $res = mysqli_query($link, "SELECT * FROM `units`");
                                         while ($row = mysqli_fetch_array($res)) {
                                             ?>
-                                            <option <?php if ($row['unit'] == $unit) {echo "selected";} ?> >
-                                                <?php echo $row['unit']; ?>
+                                            <option <?php if ($row['unit'] == $unit) {echo "selected";} ?>>
+                                                <?php echo htmlspecialchars($row['unit']); ?>
                                             </option>
                                         <?php
                                         }
@@ -81,32 +83,31 @@ while ($row = mysqli_fetch_array($res)) {
                             <div class="control-group">
                                 <label class="control-label">Quantity</label>
                                 <div class="controls">
-                                    <input type="text" name="Quantity" value="<?php echo $Quantity; ?>" class="span11" placeholder="Enter Quantity" />
+                                    <input type="text" name="Quantity" value="<?php echo htmlspecialchars($Quantity); ?>" class="span11" placeholder="Enter Quantity" />
                                 </div>
                             </div>
 
                             <div class="control-group">
                                 <label class="control-label">Price</label>
                                 <div class="controls">
-                                    <input type="text" name="Price" class="span11" value="<?php echo $Price; ?>" placeholder="Price" />
+                                    <input type="text" name="Price" class="span11" value="<?php echo htmlspecialchars($Price); ?>" placeholder="Price" />
                                 </div>
                             </div>
 
                             <div class="control-group">
                                 <label class="control-label">Date</label>
                                 <div class="controls">
-                                    <input type="date" name="Date" class="span11" value="<?php echo $Date; ?>" placeholder="Date" />
+                                    <input type="date" name="Date" class="span11" value="<?php echo htmlspecialchars($Date); ?>" placeholder="Date" />
                                 </div>
                             </div>
 
                             <div class="form-actions">
-                                <button type="submit" name="submit1" class="btn btn-success">Update</button>
+                                <button type="submit" name="submit1" style="background: #6F4E37;border-radius:5px" class="btn btn-success">Update</button>
                             </div>
 
                             <div class="alert alert-success text-center" id="success" style="display: none;">
                                 <strong>Record Updated Successfully!</strong>
                             </div>
-
                         </form>
                     </div>
                 </div>
@@ -119,69 +120,46 @@ while ($row = mysqli_fetch_array($res)) {
 if (isset($_POST['submit1'])) {
     $new_product_name = mysqli_real_escape_string($link, $_POST['product_name']);
     $unit = mysqli_real_escape_string($link, $_POST['unit']);
+    $new_Quantity = intval(mysqli_real_escape_string($link, $_POST['Quantity']));
     $Price = floatval(mysqli_real_escape_string($link, $_POST['Price']));
     $Date = mysqli_real_escape_string($link, $_POST['Date']);
-    
-    // Update product_name, unit, Price, and Date without conditions
-    mysqli_query($link, "UPDATE `served_bar` SET `product_name`='$new_product_name', `unit`='$unit', `Price`='$Price', `Date`='$Date' WHERE id='$id'") or die(mysqli_error($link));
 
-    // Fetch the current stock quantities for comparison
-    $import_res = mysqli_query($link, "SELECT Quantity FROM `served_bar` WHERE id='$id'");
+    // Fetch the total imported quantity for the product
+    $import_res = mysqli_query($link, "SELECT SUM(Quantity) as total_imported FROM `import_barista` WHERE product_name='$new_product_name'");
     $import_row = mysqli_fetch_array($import_res);
-    $current_import_quantity = intval($import_row['Quantity']); // Stock in
+    $total_imported_quantity = intval($import_row['total_imported']);
 
-    // Fetch total served quantity for the product
-    $served_res = mysqli_query($link, "SELECT SUM(Quantity) as total_served FROM `served_bar` WHERE product_name='$new_product_name'");
+    // Fetch the total served quantity for the product on the same date
+    $served_res = mysqli_query($link, "SELECT SUM(Quantity) as total_served FROM `served_bar` WHERE product_name='$new_product_name' AND Date='$Date'");
     $served_row = mysqli_fetch_array($served_res);
-    $total_served_quantity = intval($served_row['total_served']); // Stock out
+    $total_served_quantity = intval($served_row['total_served']);
 
-    // Only update Quantity if served quantity is less than imported quantity
-    if ($total_served_quantity > $current_import_quantity) {
-        $new_Quantity = intval(mysqli_real_escape_string($link, $_POST['Quantity']));
-        mysqli_query($link, "UPDATE `served_bar` SET `Quantity`='$new_Quantity' WHERE id='$id'") or die(mysqli_error($link));
+    // Validate the quantity before updating
+    if (($total_served_quantity - $Quantity) + $new_Quantity >= $total_imported_quantity) {
+        // Update the record based on Date
+        $update_query = "UPDATE `served_bar` 
+                         SET `product_name`='$new_product_name', `unit`='$unit', `Quantity`='$new_Quantity', `Price`='$Price', `Date`='$Date' 
+                         WHERE Date='$Date' AND id='$id'";
+                         
+        mysqli_query($link, $update_query) or die(mysqli_error($link));
+
+        // Show success message
+        echo "<script>
+            document.getElementById('success').style.display = 'block';
+            setTimeout(function() {
+                window.location = 'served_bar_products.php';
+            }, 1000);
+        </script>";
     } else {
-        ?>
-       
-<!-- Modal structure -->
-<div id="customAlertModal" class="modal">
-    <div class="modal-content">
-        <h3>Update Error</h3>
-        <p>Cannot update Quantity: The served quantity is equal to or greater than the available stock. The product is out of stock.</p>
-        <button onclick="closeModal()">Close</button>
-    </div>
-</div>
-
-<!-- Your form or page content -->
-
-<script type="text/javascript">
-    // Function to display the modal
-    function showModal() {
-        document.getElementById('customAlertModal').style.display = 'block';
+        echo "<script>
+            alert('Cannot update Quantity: The served quantity exceeds available stock.');
+        </script>";
     }
-
-    // Function to close the modal
-    function closeModal() {
-        document.getElementById('customAlertModal').style.display = 'none';
-    }
-
-    // Call this function instead of the alert
-    showModal();
-</script>
-        <?php
-    }
-
-    ?>
-    <script type="text/javascript">
-        document.getElementById("success").style.display = "block";
-        setTimeout(function () {
-            window.location = "served_bar_products.php";
-        }, 1000);
-    </script>
-    <?php
 }
 ?>
 
 <?php include "footer.php"; ?>
+
 
 <style>
         /* Styling the modal */

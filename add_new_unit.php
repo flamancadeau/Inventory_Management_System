@@ -45,7 +45,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['password'])) {
                     </div>
 
                     <div class="form-actions">
-                      <button type="submit" name="submit1" class="btn btn-success">Save</button>
+                      <button type="submit" name="submit1" style="border-radius:5px; background: #6F4E37;" class="btn btn-success">Save</button>
                     </div>
 
                     <div class="alert alert-success text-center" id="success" style="display: none;">
@@ -62,7 +62,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['password'])) {
          <form method="post" action="export_excel_add_new_unit.php">
                 <input type="hidden" name="table_name" value="units"> <!-- Table name -->
                 <input type="hidden" name="filename" value="Qantity unit"> <!-- Desired file name -->
-                <button type="submit" style="color:Green; float:right;margin-right:40px ;margin-bottom:20px;" name="export">
+                <button type="submit" style="color:white; background: #6F4E37; float:right;margin-right:40px ;margin-bottom:20px;" name="export">
                     Export to excel
     <a></a><i class="fas fa-file-excel"></i> </a>
 </button>
@@ -89,8 +89,9 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['password'])) {
                           <td><?php echo $row['id']; ?></td>
                           <td><?php echo $row['unit']; ?></td>
                           
-                          <td><center><a href="edit_unit.php?id=<?php echo $row['id']; ?>"style="color: green" >Edit</a></center></td>
-                          <td><center><a href="delete_unit.php?id=<?php echo $row['id']; ?>"style="color: red">Delete</a></center></td>
+                          <td><center><a href="edit_unit.php?id=<?php echo $row['id']; ?>"style="color: green" ><i class="icon icon-edit"></i></a></center></td>
+                          <td><center><a href="delete_unit.php?id=<?php echo $row['id']; ?>"style="color: red"> <i class="icon icon-trash"></i></a></center></td>
+
                         </tr>
                         <?php
                     }

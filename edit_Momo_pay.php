@@ -68,7 +68,7 @@ while($row=mysqli_fetch_array($res))
 
 
                     <div class="form-actions">
-                      <button type="submit" name="submit1" class="btn btn-success">Update</button>
+                      <button type="submit" name="submit1" style=" background: #6F4E37;border-radius:5px" class="btn btn-success">Update</button>
                     </div>
 
                     <div class="alert alert-success text-center" id="success" style="display: none;">

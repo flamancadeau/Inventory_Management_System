@@ -31,49 +31,53 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['password'])) {
                         <form name="form1" action="" method="post" class="form-horizontal">
 
                     
-                                <div class="control-group">
-                                <label class="control-label">Product Name</label>
-                                <div class="controls">
-                                    <select name="product_name" class="span11">
-                                        <option>--- Select product name ---</option>
-                                        <?php
-                                        $res = mysqli_query($link, "SELECT * FROM `import_bar`");
-                                        while ($row = mysqli_fetch_array($res)) {
-                                            echo "<option value='{$row['product_name']}'> " . $row['id'] . " - " . $row['product_name'] . "</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
+                        <div class="control-group">
+    <label class="control-label">Product Name</label>
+    <div class="controls">
+        <!-- Replacing the select with an input and datalist for product name -->
+        <input list="product_names" name="product_name" class="span11" placeholder="--- Select product name ---">
+        <datalist id="product_names">
+            <?php
+            $res = mysqli_query($link, "SELECT * FROM `import_bar`");
+            while ($row = mysqli_fetch_array($res)) {
+                echo "<option value='{$row['product_name']}' label='{$row['id']} - {$row['product_name']}'></option>";
+            }
+            ?>
+        </datalist>
+    </div>
+</div>
 
-                            <div class="control-group">
-                                <label class="control-label">Product ID</label>
-                                <div class="controls">
-                                    <select name="id" class="span11">
-                                        <option>--- Select product id ---</option>
-                                        <?php
-                                        $res = mysqli_query($link, "SELECT * FROM `import_bar`");
-                                        while ($row = mysqli_fetch_array($res)) {
-                                            echo "<option value='{$row['id']}'>ID:" . $row['id'] ." - ".$row['product_name'] . "</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <label class="control-label">Select Unit</label>
-                                <div class="controls">
-                                    <select name="unit" class="span11">
-                                        <option>--- Select Unit ---</option>
-                                        <?php
-                                        $res = mysqli_query($link, "SELECT * FROM `units`");
-                                        while ($row = mysqli_fetch_array($res)) {
-                                            echo "<option>" . $row['unit'] . "</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
+<div class="control-group">
+    <label class="control-label">Product ID</label>
+    <div class="controls">
+        <!-- Replacing the select with an input and datalist for product id -->
+        <input list="product_ids" name="id" class="span11" placeholder="--- Select product id ---">
+        <datalist id="product_ids">
+            <?php
+            $res = mysqli_query($link, "SELECT * FROM `import_bar`");
+            while ($row = mysqli_fetch_array($res)) {
+                echo "<option value='{$row['id']}' label='ID:{$row['id']} - {$row['product_name']}'></option>";
+            }
+            ?>
+        </datalist>
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label">Select Unit</label>
+    <div class="controls">
+        <!-- Replacing the select with an input and datalist for units -->
+        <input list="units" name="unit" class="span11" placeholder="--- Select Unit ---">
+        <datalist id="units">
+            <?php
+            $res = mysqli_query($link, "SELECT * FROM `units`");
+            while ($row = mysqli_fetch_array($res)) {
+                echo "<option value='{$row['unit']}'></option>";
+            }
+            ?>
+        </datalist>
+    </div>
+</div>
 
                             <div class="control-group">
                                 <label class="control-label">Quantity</label>
@@ -97,7 +101,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['password'])) {
                             </div>
 
                             <div class="form-actions">
-                                <button type="submit" name="serve_product" class="btn btn-success">Serve Product</button>
+                                <button type="submit" name="serve_product" style="border-radius:5px ;background: #6F4E37;" class="btn btn-success">Serve Product</button>
                             </div>
 
                             <div class="alert alert-danger text-center" id="error" style="display: none;">
@@ -117,7 +121,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['password'])) {
             <form method="post" action="export_excel_served_bar.php">
                 <input type="hidden" name="table_name" value="served_bar"> <!-- Table name -->
                 <input type="hidden" name="filename" value="served_bar_records"> <!-- Desired file name -->
-                <button type="submit" style="color:Green; float:right;margin-right:40px ;margin-bottom:20px;" name="export">
+                <button type="submit" style="color:white; float:right;margin-right:40px ;margin-bottom:20px; background: #6F4E37;" name="export">
                     Export to excel
     <a></a><i class="fas fa-file-excel"></i> </a>
 </button>
@@ -147,10 +151,17 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['password'])) {
                                 <td>{$row['Quantity']}</td>
                                 <td>{$row['Price']}</td>
                                 <td>{$row['Date']}</td>
-                                <td>
+                              
                                     <center>
-                                        <a title='Edit' class='tip-bottom' href='edit_served_bar_product.php?id={$row['id']}' style='color: green'><i class='icon icon-edit'></i></a>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                                           
+<td>
+    <center>
+        <a title='Edit' class='tip-bottom' href='edit_served_bar_product.php?Date=" . urlencode($row['Date']) . "' style='color: green'><i class='icon icon-edit'></i></a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+    </center>
+</td>
+
+     
                                        
                             </tr>";
                         }

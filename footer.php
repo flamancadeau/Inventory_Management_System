@@ -1,7 +1,8 @@
 <!--Footer-part-->
 
 <div class="row-fluid">
-    <div id="footer" class="span12" style="color:white"> Designed And Developed By: flaman</div>
+    <div id="footer" class="span12" style="color:black;font-family: 'Bauhaus 93', sans-serif;
+;font-size:14px;opacity:30%"> Designed And Developed By:irakozeflamanc@gmail.com</div>
 </div>
 
 <!--end-Footer-part-->

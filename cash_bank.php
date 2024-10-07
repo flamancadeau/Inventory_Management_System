@@ -47,7 +47,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['password'])) {
                             </div>
 
                             <div class="form-actions">
-                                <button type="submit" name="submit1" class="btn btn-success">Save</button>
+                                <button type="submit" name="submit1"  style="border-radius:5px; background: #6F4E37;"class="btn btn-success">Save</button>
                             </div>
 
                             <div class="alert alert-success text-center" id="success" style="display: none;">
@@ -62,7 +62,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['password'])) {
             <form method="post" action="export_to_excel_bank.php">
                 <input type="hidden" name="table_name" value="bank"> <!-- Table name -->
                 <input type="hidden" name="filename" value="bank_records"> <!-- Desired file name -->
-                <button type="submit" style="color:Green; float:right;margin-right:40px ;margin-bottom:20px;" name="export">
+                <button type="submit" style="color:white;  background: #6F4E37;float:right;margin-right:40px ;margin-bottom:20px;" name="export">
                     Export to excel
     <a></a><i class="fas fa-file-excel"></i> </a>
 </button>

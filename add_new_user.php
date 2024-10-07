@@ -98,7 +98,7 @@ window.onload = secondAuthentication;
                     </div>
 
                     <div class="form-actions">
-                      <button type="submit" id="saveButton" name="submit1" class="btn btn-success" style="display: none;">Save</button>
+                      <button type="submit" id="saveButton" style=" background: #6F4E37;border-radius:5px" name="submit1" class="btn btn-success" style="display: none;border-radius:5px;">Save</button>
                     </div>
 
                     <div class="alert alert-success text-center" id="success" style="display: none;">
@@ -130,8 +130,8 @@ window.onload = secondAuthentication;
                           <td><?php echo $row['firstname']; ?></td>
                           <td><?php echo $row['lastname']; ?></td>
                           <td><?php echo $row['username']; ?></td>
-                          <td><a href="edit_user.php?id=<?php echo $row['id']; ?>" class="editButton" style="display:none;">Edit</a></td>
-                          <td><a href="delete_user.php?id=<?php echo $row['id']; ?>" class="deleteButton" style="display:none;">Delete</a></td>
+                          <td><a href="edit_user.php?id=<?php echo $row['id']; ?>" class="editButton" style="display:none;color:Green;"><i class="icon icon-edit"></i></a></td>
+                          <td><a href="delete_user.php?id=<?php echo $row['id']; ?>" class="deleteButton" style="display:none;color:red;"> <i class="icon icon-trash"></i</a></td>
                         </tr>
                     <?php
                     }
