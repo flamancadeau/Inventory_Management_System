@@ -79,7 +79,7 @@ if (!isset($_SESSION['username']) || !isset($_SESSION['password'])) {
                     <div class="control-group">
                       <label class="control-label">Date</label>
                       <div class="controls">
-                      +
+                      <input type="Date" name="Date" class="span11" placeholder="Date"/>
                       </div>
                     </div>
 
